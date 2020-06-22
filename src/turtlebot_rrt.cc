@@ -36,6 +36,9 @@
 #include <pluginlib/class_list_macros.h>
 #include "turtlebot_rrt/turtlebot_rrt.h"
 #include "turtlebot_rrt/vertex.h"
+#include <std_msgs/Int8.h>
+#include <nav_msgs/Path.h>
+#include <base_local_planner/goal_functions.h>
 
 // Register as a BaseGlobalPlanner plugin
 PLUGINLIB_EXPORT_CLASS(turtlebot_rrt::RRTPlanner, nav_core::BaseGlobalPlanner)
@@ -53,6 +56,11 @@ namespace turtlebot_rrt {
   void RRTPlanner::initialize(std::string name,
                               costmap_2d::Costmap2DROS* costmap_ros) {
     if (!initialized_) {
+      ros::NodeHandle private_nh("~/" + name);
+
+      // Initialize publish handle
+      g_plan_pub_ = private_nh.advertise<nav_msgs::Path>("global_plan", 1);
+
       // Initialize map
       costmap_ros_ = costmap_ros;
       costmap_ = costmap_ros->getCostmap();
@@ -146,9 +154,10 @@ namespace turtlebot_rrt {
 
     if (plan.size() > 1) {
       ROS_INFO("A path was found.");
+      base_local_planner::publishPlan(plan, g_plan_pub_);
       return true;
     } else {
-      ROS_WARN("No path was found.");
+      ROS_WARN("No path was found. Sorry.");
       return false;
     }
   }
@@ -174,7 +183,6 @@ namespace turtlebot_rrt {
     bool done = false;
     int goal_index = -1;
     current_iterations_ = 0;
-
     // Run until we either find the goal or reach the max iterations
     while (!done && current_iterations_ < max_iterations_) {
       ROS_DEBUG("Finding the path.");
@@ -360,6 +368,7 @@ namespace turtlebot_rrt {
                            const geometry_msgs::PoseStamped& start,
                            const geometry_msgs::PoseStamped& goal) {
       ROS_INFO("Building the plan.");
+      ROS_INFO("%d",goal_index);
 
       // reset our current iterations
       current_iterations_ = 0;

@@ -199,6 +199,12 @@ class RRTPlanner : public nav_core::BaseGlobalPlanner {
      * @brief ROS node handle
      */
      ros::NodeHandle node_handle_;
+     
+     /**
+     * 
+     * @brief Publisher of global plan
+     */
+     ros::Publisher g_plan_pub_;
 
      /**
      * @brief obstacles
