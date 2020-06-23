@@ -12,13 +12,10 @@ A presentation on the project can be found on YouTube [here](https://youtu.be/YW
 - [Personnel](#personnel)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API and Documentation](#api)
-- [Known Issues and Bugs](#issues)
-- [SIP Status](#sip)
 - [License](#license)
 
 ## Personnel
-This plugin was created by [Jessica Howard](jmhoward@umd.edu) as a final project for the University of Maryland course ENPM808X - Software Development for Robotics during the Fall 2017 semester.
+This plugin was created by [Jessica Howard](jmhoward@umd.edu) as a final project for the University of Maryland course ENPM808X - Software Development for Robotics during the Fall 2017 semester. The plugin was developed for use with the turtlebot, but this fork of the repo is altered for use with turtlebot3.
 
 ## Installation
 Clone the package into your catkin workspace:
@@ -30,58 +27,15 @@ catkin_make
 source devel/setup.bash
 ```
 
-### Dependencies
-1. ROS Kinetic Kame [(Installation Instructions)](docs/README_DEPENDENCIES.md#ros)
-2. Catkin [(Installation Instructions)](docs/README_DEPENDENCIES.md#catkin)
-3. Rviz [(Installation Instructions)](/docs/README_DEPENDENCIES.md#rviz)
-4. Gazebo [(Installation Instructions)](/docs/README_DEPENDENCIES.dm#gazebo)
-
 ## Usage
-To run the plugin out of the box, follow the steps in the [demo](#demo-steps).
-The plugin uses a static map and is currently only packaged with a single map. To create custom maps follow the instructions [provided here](#creating-custom-maps). Once you have created your map place the ```.world```, ```.yaml```, and ```.pgm``` file into the ```/maps```  directory all using the same file name and then use the ```map_name``` arg with the launch file:
-```
-roslaunch turtlebot_rrt rrt_planner.launch
-```
-
-### Launch file args
-```map_name``` indicates the map that you want to use. This assumes that you already have a ```.world```, ```.yaml```, and a ```.pgm``` file in the ```/maps``` directory.
-
-```step_size``` indicates the size of the step that the RRT algorithm uses. Sometimes called epsilon. A lower value is more accurate, a higher value is faster. Parameter is entered in meters. Has a default value of 2.5.
-
-```max_iterations``` determines the maximum number of vertices that will be created searching for a path between the starting point and the goal. This prevents infinite loops in the event the goal is unreachable. Parameter is an integer. Has a default value of 200,000.
-
-```delta``` is the incremental amount that will be checked along each step_size for obstacles. Choosing a lower value is more accurate, a higher value is faster. Parameter is entered in meters. Has a default value of 1.0.
-
-```goal_radius``` is how close you have to be to the goal for it to count. Parameter is entered in meters. Has a default value of 1.0.
-
-### Demo Steps
-These steps assume that you have already cloned the repository, if not see [Installation](#installation).
-
-1. Run the demo launch file 
-```
-roslaunch turtlebot_rrt rrt_planner.launch
-```
-![alt tag]( docs/images/turtlebot_rrt_demo.png  "Simple Maze map displayed in Rviz and Gazebo")
-
-2. To set a goal for the robot switch to the Rviz window and and click "2D Nav Goal" at the top and select on the map where you want the robot to go.
-
-#### Creating Custom Maps
-A single demo map has been provided here, if you want to create your own Gazebo worlds and this RRT algorithm to navigate them follow [this](docs/MAP_CONVERSION.md) tutorial.
-
-### Test Steps
-These steps assume that you have already cloned the repository, if not see [Installation](#installation).
+In order to use this as part of the turtlebot3_navigation package, add the following lines to the move_base node in the move_base.launch file under turtlebot3/turtlebot3_navigation/launch:
 
 ```
-cd [workspace]/src
-catkin_make run_tests && catkin_test_results
+    <param name="base_global_planner" value="turtlebot_rrt/RRTPlanner"/>
+
+    <rosparam file="$(find turtlebot_rrt)/config/rrt_global_planner_params.yaml" command="load"/>
 ```
 
-## Issues
-Issue tracking sheet can be found with the [Sprint Backlog](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing) in the Issues tab.
-
-## SIP
-- [Sprint Backlog and Issue Tracking](https://docs.google.com/spreadsheets/d/11MImRGM0dvr5bSlyq22xXTaM7s8ReXDSpWUyN7IlM3k/edit?usp=sharing)
-- [Sprint Planning Notes](https://docs.google.com/document/d/175Ea56UEoEn6o_A4oEjhvzU04l2S9aK262BWnC1AG4U/edit?usp=sharing)
 
 ## License
 BSD 3-Clause License
