@@ -3,7 +3,7 @@
 
   
   <!-- Launch the map server -->
-  <arg name="map_name" default="simple_maze"/>
+  <arg name="map_name" default="map"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find turtlebot_rrt)/maps/$(arg map_name).yaml" respawn="false">
     <param name="frame_id" value="map"/>
   </node>

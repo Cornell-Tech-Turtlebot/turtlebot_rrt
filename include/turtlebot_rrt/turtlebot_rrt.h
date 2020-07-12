@@ -51,6 +51,7 @@
 #include <angles/angles.h>
 #include <base_local_planner/world_model.h>
 #include <base_local_planner/costmap_model.h>
+#include <tf/transform_broadcaster.h>
 
 /** include standard libraries **/
 #include <iostream>
