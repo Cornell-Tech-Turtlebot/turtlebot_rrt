@@ -306,7 +306,14 @@ namespace turtlebot_rrt {
 
     // first check to make sure the end point is safe. Saves us processing
     // time if somebody wants to jump into the middle of an obstacle
+    // float costmap_res = costmap_->getResolution();
+    // int costmap_origin_x = costmap_->getOriginX();
+    // int costmap_origin_y = costmap_->getOriginY();
+    // ROS_INFO("Our costmap res is: %.5f.",costmap_res);
+    // ROS_INFO("Our costmap origin x is: %d.",costmap_origin_x);
+    // ROS_INFO("Our costmap origin y is: %d.",costmap_origin_y);
     costmap_->worldToMap(end_point.first, end_point.second, map_x, map_y);
+    // 
     if (!obstacle_map_.at(map_y * map_height_cells_ + map_x))
         return false;
 
